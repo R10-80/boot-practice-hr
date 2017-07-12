@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+		<priority value="debug"></priority>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{MM/dd/yyyy HH:mm:ss.SSS} [%-5p] {%C{1}.%M} %m %n" />
+		</layout>
+	</appender>
+
+	<appender name="FileAppender" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="D:/logs/BootHR.log" />
+		<param name="Threshold" value="DEBUG" />
+		<param name="MaxFileSize" value="10000KB" />
+		<priority value="debug"></priority>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{MM/dd/yyyy HH:mm:ss.SSS} [%-5p] {%C{1}.%M} %m %n" />
+		</layout>
+	</appender>
+
+	<logger name="org.apache">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.hibernate">
+		<level value="info" />
+	</logger>
+
+	<logger name="edu.practice" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="ConsoleAppender" />
+		<appender-ref ref="FileAppender" />
+	</logger>
+
+	<root>
+		<priority value="debug"></priority>
+	</root>
+
+
+</log4j:configuration>
