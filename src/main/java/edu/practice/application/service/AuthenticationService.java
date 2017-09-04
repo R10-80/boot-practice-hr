@@ -1,10 +1,10 @@
 package edu.practice.application.service;
 
-import edu.practice.application.model.User;
+import edu.practice.exception.BootException;
 
 
 public interface AuthenticationService {
 
-	public boolean authenticate(User user);
+	public boolean authenticate(Integer id) throws BootException;
 
 }

@@ -7,11 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.practice.application.model.User;
+import edu.practice.application.dao.CheckIdDAO;
 import edu.practice.application.service.AuthenticationService;
+import edu.practice.exception.BootException;
 
 @Controller
-//@RequestMapping(value = "/bootHR")
 public class LoginController {
 
 	private static final Logger LOGGER = Logger.getLogger(LoginController.class);
@@ -19,24 +19,27 @@ public class LoginController {
 	@Autowired
 	private AuthenticationService authenticationService;
 
+	@Autowired
+	private CheckIdDAO checkIdDAO;
+
 	@RequestMapping(value = "/loginHome", method = RequestMethod.GET)
 	public String loginPage(Model model) {
-
 		LOGGER.debug("loginPage - Hit");
-
-		model.addAttribute("user", new User());
-
 		return "login";
 	}
 
-	@RequestMapping(value = "/homePage", method = RequestMethod.POST)
-	public String loginHome(Model model, User user) {
-
-		System.out.println("loginHome - Hit");
-
-		authenticationService.authenticate(user);
-
-		return "home";
+	@RequestMapping(value = "/checkLogin.html", method = RequestMethod.GET)
+	public String checkLogin(Model model, Integer id) {
+		System.out.println("checkLogin.html - Hit " + id);
+		try {
+			boolean result = authenticationService.authenticate(id);
+			if(result){
+            	return "login";
+			}
+		} catch (BootException e) {
+			System.out.println("Exception!!");
+		}
+		return "somewhere";
 	}
 
 }
