@@ -1,20 +1,24 @@
 package edu.practice.application.controller;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.practice.application.dao.CheckIdDAO;
+import edu.practice.application.model.Department;
 import edu.practice.application.service.AuthenticationService;
+import edu.practice.application.service.DepartmentService;
 import edu.practice.exception.BootException;
 
 @Controller
+@SessionAttributes("department")
 public class LoginController {
-
-	private static final Logger LOGGER = Logger.getLogger(LoginController.class);
 
 	@Autowired
 	private AuthenticationService authenticationService;
@@ -22,24 +26,47 @@ public class LoginController {
 	@Autowired
 	private CheckIdDAO checkIdDAO;
 
+	@Autowired
+	private DepartmentService departmentService;
+
 	@RequestMapping(value = "/loginHome", method = RequestMethod.GET)
 	public String loginPage(Model model) {
-		LOGGER.debug("loginPage - Hit");
+		model.addAttribute("department", new Department());
 		return "login";
 	}
 
-	@RequestMapping(value = "/checkLogin.html", method = RequestMethod.GET)
-	public String checkLogin(Model model, Integer id) {
-		System.out.println("checkLogin.html - Hit " + id);
-		try {
-			boolean result = authenticationService.authenticate(id);
-			if(result){
-            	return "login";
-			}
-		} catch (BootException e) {
-			System.out.println("Exception!!");
+	@RequestMapping(value = "/checkLogin.html", params="checkLogin",method = RequestMethod.POST)
+	public String checkLogin(@ModelAttribute("department") Department department, Model model) throws BootException {
+		System.out.println("checkLogin.html - Hit " + department.getId());
+		boolean result = authenticationService.authenticate(department.getId());
+		if (result) {
+			department.setDepartments(checkIdDAO.departments());
+			model.addAttribute("department", department);
+			model.addAttribute("departments", department.getDepartments());
+			return "login";
 		}
-		return "somewhere";
+		return "login";
+	}
+
+	@RequestMapping(value = "/checkLogin.html", params="home",method = RequestMethod.POST)
+	public String homeLogin(@ModelAttribute("department") Department department, Model model) throws BootException {
+
+		model.addAttribute("deptName", department.getDepartments().get(department.getDeptId()));
+
+		System.out.println("dep " + departmentService.getDetails(department.getDeptId()));
+
+		return "home";
+	}
+
+	@ExceptionHandler(BootException.class)
+	public ModelAndView handleException(BootException ex) {
+
+		ModelAndView model = new ModelAndView("exception");
+		model.addObject("errCode", ex.getCode());
+		model.addObject("errMsg", ex.getMessage());
+
+		return model;
+
 	}
 
 }

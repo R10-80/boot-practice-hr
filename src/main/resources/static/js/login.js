@@ -4,24 +4,10 @@ $(document).ready(function() {
 
      	if(isNaN($("#empId").val())){
     		$('.numero').show();
-			return;
+    		return;
 		}else{
 			$('.numero').hide();
 		}
-
-		$.ajax({
-			url : "checkLogin.html",
-			type : "get",
-			data : {
-				id: $("#empId").val()
-			},
-			success : function(response) {
-				console.log('Ajax Call Success!!');
-				if(response){
-					$(".departmento").show();
-				}
-			},
-		});
 	});
 
 });

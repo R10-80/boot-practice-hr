@@ -15,4 +15,13 @@ public class BootException extends Exception {
 		this.message = message;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+
 }
