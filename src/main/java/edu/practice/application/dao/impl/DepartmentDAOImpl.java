@@ -2,7 +2,6 @@ package edu.practice.application.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -21,39 +20,33 @@ public class DepartmentDAOImpl implements DepartmentDAO {
 	@Autowired
 	DataSource dataSource;
 
-	@Value("{${details.sql}}")
+	@Value("${details.sql}")
 	String detailSql;
 
 	@Override
 	public Details getDetails(Integer deptNo) {
 
-		System.out.println("dhere " + detailSql);
-
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-
-		List<Details> details = jdbcTemplate.query(detailSql, new Object[] { deptNo }, new RowMapper<Details>(){
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		Details details = jdbcTemplate.queryForObject(detailSql, new Object[] { deptNo }, new RowMapper<Details>(){
 
 			@Override
 			public Details mapRow(ResultSet rs, int arg1) throws SQLException {
 
 				Details detail = new Details();
 
-				detail.setAddress("STREET_ADDRESS");
-				detail.setCity("CITY");
-				detail.setPostalCode("POSTAL_CODE");
-				detail.setRegion("REGION_NAME");
-				detail.setSupervisor("SUPERVISOR");
-				detail.setState("STATE_PROVINCE");
-				detail.setCountry("COUNTRY_NAME");
+				detail.setAddress(rs.getString("STREET_ADDRESS"));
+				detail.setCity(rs.getString("CITY"));
+				detail.setPostalCode(rs.getString("POSTAL_CODE"));
+				detail.setRegion(rs.getString("REGION_NAME"));
+				detail.setState(rs.getString("STATE_PROVINCE"));
+				detail.setCountry(rs.getString("COUNTRY_NAME"));
 
 				return detail;
 			}
 
 		});
 
-		System.out.println(details);
-
-		return details.get(0);
+		return details;
 	}
 
 

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.practice.application.dao.CheckIdDAO;
 import edu.practice.application.model.Department;
+import edu.practice.application.model.Details;
 import edu.practice.application.service.AuthenticationService;
 import edu.practice.application.service.DepartmentService;
 import edu.practice.exception.BootException;
@@ -52,9 +53,8 @@ public class LoginController {
 	public String homeLogin(@ModelAttribute("department") Department department, Model model) throws BootException {
 
 		model.addAttribute("deptName", department.getDepartments().get(department.getDeptId()));
-
-		System.out.println("dep " + departmentService.getDetails(department.getDeptId()));
-
+		Details details = departmentService.getDetails(department.getDeptId());
+		model.addAttribute("details", details);
 		return "home";
 	}
 

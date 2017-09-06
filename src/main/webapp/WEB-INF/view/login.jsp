@@ -17,7 +17,7 @@
 		<table>
 			<tr>
 				<td>Enter Id: <form:input id="empId" type="text" path="id" /></td>
-				<td><input type="submit" id="check" value="CheckLogin" name="checkLogin"/></td>
+				<td><input type="submit" id="check" value="Check" name="checkLogin"/></td>
 				<td><div class="numero" style="display: none; color: red">Enter a numeric value</div></td>
 			</tr>
 			<tr></tr>
